@@ -1,5 +1,6 @@
 from datetime import datetime
 from flask_login import UserMixin
+from sqlalchemy import UniqueConstraint
 from . import db
 
 from sqlalchemy import ForeignKey
@@ -64,6 +65,8 @@ class QuestionViews(db.Model):
     question = db.relationship(
         'Question', backref=db.backref('times_viewed', lazy=True,
                                        cascade="all, delete-orphan"))
+    __table_args__ = (UniqueConstraint('user_id', 'question_id',
+                                       name='user_question_views_uc'),)
 
 
 class Answer(db.Model):
@@ -96,6 +99,8 @@ class QuestionVote(db.Model):
     user = db.relationship(
         'User', backref=db.backref('question_votes', lazy=True,
                                    cascade="all, delete-orphan"))
+    __table_args__ = (UniqueConstraint('user_id', 'question_id',
+                                       name='user_question_vote_uc'),)
 
 
 class AnswerVote(db.Model):
@@ -111,3 +116,5 @@ class AnswerVote(db.Model):
     user = db.relationship(
         'User', backref=db.backref('answer_votes', lazy=True,
                                    cascade="all, delete-orphan"))
+    __table_args__ = (UniqueConstraint('user_id', 'answer_id',
+                                       name='user_answer_vote_uc'),)

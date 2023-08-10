@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: b835ba6eb212
-Revises: adea21304ec6
-Create Date: 2023-07-26 08:56:14.552321
+Revision ID: a7477dd17704
+Revises: 
+Create Date: 2023-08-10 18:05:06.474956
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'b835ba6eb212'
-down_revision = 'adea21304ec6'
+revision = 'a7477dd17704'
+down_revision = None
 branch_labels = None
 depends_on = None
 
@@ -58,7 +58,8 @@ def upgrade():
     sa.Column('question_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['question_id'], ['question.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
-    sa.PrimaryKeyConstraint('user_id', 'question_id')
+    sa.PrimaryKeyConstraint('user_id', 'question_id'),
+    sa.UniqueConstraint('user_id', 'question_id', name='user_question_views_uc')
     )
     op.create_table('question_vote',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -67,7 +68,8 @@ def upgrade():
     sa.Column('question_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['question_id'], ['question.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('user_id', 'question_id', name='user_question_vote_uc')
     )
     op.create_table('tagged_items',
     sa.Column('tag_id', sa.Integer(), nullable=True),
@@ -82,7 +84,8 @@ def upgrade():
     sa.Column('answer_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['answer_id'], ['answer.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('user_id', 'answer_id', name='user_answer_vote_uc')
     )
     # ### end Alembic commands ###
 
