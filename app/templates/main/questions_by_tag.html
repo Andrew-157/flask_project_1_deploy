@@ -1,0 +1,38 @@
+{% extends 'main_base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="container py-5">
+        <h3 class="text-center">Number of questions found with tag
+            <a class="text-decoration-none" href="{{ url_for('main.questions_by_tag', tag=tag) }}">
+                <span class="badge bg-primary">{{ tag }}</span>
+            </a>: {{ questions|length }}
+        </h3>
+        {% for question in questions %}
+        <div class="container p-3 my-3 border">
+            <p class="fw-bold">
+                <a class="text-decoration-none" href="{{ url_for('main.question_detail', id=question.id) }}">
+                    {{question.title }}</a>
+                <small class="text-muted">(Asked by <a
+                        href="{{ url_for('main.public_page', username=question.user.username) }}">
+                        {{ question.user }}</a> on {{ question.asked.strftime('%Y-%m-%d') }})</small>
+            </p>
+            <p>
+                <small class="text-muted">
+                    Answers: {{ answers_count[question.id] }} <br>
+                    Votes: {{ votes_count[question.id] }} <br>
+                    Times viewed: {{ question.times_viewed| length }} <br>
+                </small>
+            </p>
+            <p>
+                {% for tag in question.tags %}
+                <a class="text-decoration-none" href="{{ url_for('main.questions_by_tag', tag=tag.name) }}">
+                    <span class="badge bg-primary ">{{ tag.name }}</span>
+                </a>
+                {% endfor %}
+            </p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

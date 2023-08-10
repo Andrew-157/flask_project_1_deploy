@@ -1,0 +1,26 @@
+{% extends 'main_base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="container py-5">
+        <h2>Number of questions {{ user }} asked: {{ questions_asked|length }} </h2>
+        <div class="container py-3 my-3 border">
+            {% for question in questions_asked %}
+            <a class="text-decoration-none" href="{{ url_for('main.question_detail', id=question.id)}}">
+                {{ question.title }}
+            </a> <br>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="container py-5">
+        <h2>Number of questions {{ user }} answered: {{ questions_answered|length }} </h2>
+        <div class="container py-3 my-3 border">
+            {% for question in questions_answered %}
+            <a class="text-decoration-none" href="{{ url_for('main.question_detail', id=question.id)}}">
+                {{ question.title }}
+            </a> <br>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

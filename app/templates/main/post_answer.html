@@ -1,0 +1,37 @@
+{% extends 'form_base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <h1>Publish your answer for question:
+        <a class="text-decoration-none" href="{{ url_for('main.question_detail', id=question.id) }}">
+            {{ question.title }}</a>
+    </h1>
+    <form action="{{ url_for('main.post_answer', question_id=question.id) }}" method="post">
+        {% if config.WTF_CSRF_ENABLED %}
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+        {% endif %}
+        <div class="mb-3 mt-3">
+            <label for="content" class="form-label">Answer's content</label>
+            {% if not content %}
+            <textarea class="form-control" placeholder="Enter your answer: " name="content" id="details" rows="7"
+                required></textarea>
+            {% else %}
+            <textarea class="form-control" placeholder="Enter your answer:" name="content" id="details" rows="7"
+                required>{{ content }}</textarea>
+            {% endif %}
+            <p class="text-muted"><small>Form your answer clearly.</small></p>
+            {% with messages=get_flashed_messages() %}
+            {% if messages %}
+            {% for message in messages %}
+            {% if 'content' in message|lower %}
+            <p class="text-danger">{{ message }}</p>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+        </div>
+        <button type="submit" class="btn btn-primary">Answer question</button>
+    </form>
+
+</div>
+{% endblock %}

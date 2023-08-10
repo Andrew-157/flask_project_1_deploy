@@ -1,0 +1,52 @@
+{% extends 'form_base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <h1>Change your profile</h1>
+    <form action="{{ url_for('auth.change_profile') }}" method="post">
+        {% if config.WTF_CSRF_ENABLED %}
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+        {% endif %}
+        <div class="mb-3 mt-3">
+            <label for="username" class="form-label">Username:</label>
+            {% if not username %}
+            <input id="username" type="text" placeholder="Enter new username" class="form-control" name="username"
+                required>
+            {% else %}
+            <input id="username" type="text" placeholder="Enter new username" class="form-control"
+                value="{{ username }}" name="username" required>
+            {% endif %}
+            <p class="text-muted"><small>Minimum number of symbols is 5. Letters, digits and @/./+/-/_ only.</small></p>
+            {% with messages=get_flashed_messages() %}
+            {% if messages %}
+            {% for message in messages %}
+            {% if 'username' in message|lower %}
+            <p class="text-danger">{{ message }}</p>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+        </div>
+        <div class="mb-3 mt-3">
+            <label for="email" class="form-label">Email:</label>
+            {% if not email %}
+            <input id="email" type="email" placeholder="Enter new email" class="form-control" name="email" required>
+            {% else %}
+            <input id="email" type="email" placeholder="Enter new email" class="form-control" value="{{ email }}"
+                name="email" required>
+            {% endif %}
+            <p class="text-muted"><small>Enter a valid email address.</small></p>
+            {% with messages=get_flashed_messages() %}
+            {% if messages %}
+            {% for message in messages %}
+            {% if 'email' in message|lower %}
+            <p class="text-danger">{{ message }}</p>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+        </div>
+        <button type="submit" class="btn btn-primary">Change profile</button>
+    </form>
+</div>
+{% endblock %}

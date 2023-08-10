@@ -1,0 +1,163 @@
+{% extends 'main_base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="container">
+        <h1>{{ question.title }}</h1>
+        {% if current_user.id == question.user_id %}
+        <a class="text-decoration-none" href="{{ url_for('main.update_question', id=question.id) }}">
+            Update your question</a>
+        <form action="{{ url_for('main.delete_question', id=question.id) }}" method="post">
+            {% if config.WTF_CSRF_ENABLED %}
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+            {% endif %}
+            <button class="btn btn-danger btn-sm">Delete your question</button>
+        </form>
+        {% endif %}
+        <p>
+            {% for tag in question.tags %}
+            <a class="text-decoration-none" href="{{ url_for('main.questions_by_tag', tag=tag.name) }}">
+                <span class="badge bg-primary ">{{ tag.name }}</span>
+            </a>
+            {% endfor %}
+        </p>
+        <div class="container py-5 border">
+            <h3>Details of the question:</h3>
+            {% if question.details %}
+            <p class="text-break">{{ question.details }}</p>
+            {% else %}
+            <p class="text-info">No details for question provided.</p>
+            {% endif %}
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-4">
+                    <h5>Would you describe this question as:</h5>
+                    {% if voting_status.is_upvote == True %}
+                    <p><small>(You are considering this question useful)</small></p>
+                    {% elif voting_status.is_upvote == False %}
+                    <p><small>(You are considering this question not useful)</small></p>
+                    {% endif %}
+                    <div class="btn-group">
+                        <form action="{{ url_for('main.upvote_question', id=question.id) }}" method="post">
+                            {% if config.WTF_CSRF_ENABLED %}
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                            {% endif %}
+                            <button class="btn btn-primary btn-sm">Useful</button>
+                        </form>
+                        <form action="{{ url_for('main.downvote_question', id=question.id) }}" method="post">
+                            {% if config.WTF_CSRF_TOKEN %}
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                            {% endif %}
+                            <button class="btn btn-danger btn-sm">Not Useful</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <p>
+                        <small class="text-muted">
+                            Asked by <a href="{{ url_for('main.public_page', username=question.user.username) }}"
+                                class="text-decoration-none"> {{ question.user }}</a> <br>
+                            Asked on {{ question.asked.strftime('%Y-%m-%d') }} <br>
+                            {% if question.updated %}
+                            Updated on {{ question.updated.strftime('%Y-%m-%d') }} <br>
+                            {% endif %}
+                        </small>
+                    </p>
+                </div>
+                <div class="col-sm-4">
+                    <p>
+                        <small class="text-muted">
+                            Times question was viewed: {{ question.times_viewed|length }} <br>
+                            Users who consider question <text class="text-primary fw-bold">useful</text>: {{ upvotes }}
+                            <br>
+                            Users who consider question <text class="text-danger fw-bold">not useful</text>:
+                            {{ downvotes }}
+                            <br>
+                        </small>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container py-5">
+        <h3 class="text-center">Answers({{ answers|length }})
+        </h3>
+        <p class="text-center">
+            <a class="text-decoration-none text-center"
+                href="{{ url_for('main.post_answer', question_id=question.id) }}">
+                Publish your answer</a>
+        </p>
+        {% for answer in answers %}
+        <div class="container py-3">
+            <div class="container py-3 my-3 border">
+                {% if answer.user == current_user %}
+                <a class="text-decoration-none" href="{{ url_for('main.update_answer', id=answer.id) }}">
+                    Update your answer</a>
+                <form action="{{ url_for('main.delete_answer', id=answer.id) }}" method="post">
+                    {% if config.WTF_CSRF_ENABLED %}
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                    {% endif %}
+                    <button class="btn btn-danger btn-sm">Delete your answer</button>
+                </form>
+                {% endif %}
+                <h3>Answer:</h3>
+                <p class="text-break">{{ answer.content }}</p>
+            </div>
+            <div class="conatiner">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <h5>Would you describe this answer as:</h5>
+                        {% if answer.id in answer_votes_user %}
+                        {% if answer_votes_user[answer.id].is_upvote == True %}
+                        <p><small>(You are considering this answer useful.)</small></p>
+                        {% elif answer_votes_user[answer.id].is_upvote == False %}
+                        <p><small>(You are considering this question not useful.)</small></p>
+                        {% endif %}
+                        {% endif %}
+                        <div class="btn-group">
+                            <form action="{{ url_for('main.upvote_answer', id=answer.id) }}" method="post">
+                                {% if config.WTF_CSRF_ENABLED %}
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                                {% endif %}
+                                <button class="btn btn-primary btn-sm">Useful</button>
+                            </form>
+                            <form action="{{ url_for('main.downvote_answer', id=answer.id)}}" method="post">
+                                {% if config.WTF_CSRF_ENABLED %}
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                                {% endif %}
+                                <button class="btn btn-danger btn-sm">Not Useful</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <p>
+                            <small class="text-muted">
+                                Answered by <a href="{{ url_for('main.public_page', username=answer.user.username) }}"
+                                    class="text-decoration-none"> {{ answer.user }}</a> <br>
+                                Answered on {{ question.asked.strftime('%Y-%m-%d') }} <br>
+                                {% if answer.updated %}
+                                Updated on {{ question.updated.strftime('%Y-%m-%d') }} <br>
+                                {% endif %}
+                            </small>
+                        </p>
+                    </div>
+                    <div class="col-sm-4">
+                        <p>
+                            <small class="text-muted">
+                                Users who consider answer <text class="text-primary fw-bold">useful</text>:
+                                {{ answers_upvotes[answer.id] }}
+                                <br>
+                                Users who consider answer <text class="text-danger fw-bold">not useful</text>:
+                                {{ answers_downvotes[answer.id] }}
+                                <br>
+                            </small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

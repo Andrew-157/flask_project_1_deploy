@@ -1,0 +1,52 @@
+{% extends 'form_base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <h1>Update your question:
+        <a class="text-decoration-none" href="">{{ question.title }}</a>
+    </h1>
+    <form action="{{ url_for('main.update_question', id=question.id) }}" method="post">
+        {% if config.WTF_CSRF_ENABLED %}
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+        {% endif %}
+        <div class="mb-3 mt-3">
+            <label for="title" class="form-label">Title:</label>
+            <input value="{{ question.title }}" type="text" id="title" class="form-control"
+                placeholder="Enter new title" name="title" required>
+            <p class="text-muted"><small>Maximum length of you question is 300 characters.</small></p>
+            {% with messages=get_flashed_messages() %}
+            {% if messages %}
+            {% for message in messages %}
+            {% if 'title' in message|lower %}
+            <p class="text-danger">{{ message }}</p>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+        </div>
+        <div class="mb-3 mt-3">
+            <label for="details" class="form-label">Details:</label>
+            {% if not question.details %}
+            <textarea name="details" placeholder="Update details for your question" id="details" class="form-control"
+                rows="7"></textarea>
+            {% else %}
+            <textarea name="details" placeholder="Update details for your question" id="details" class="form-control"
+                rows="7">{{ question.details }}</textarea>
+            {% endif %}
+            <p class="text-muted"><small>Details are not mandatory, but they are helpful for other users.</small></p>
+        </div>
+        <div class="mb-3 mt-3">
+            <label for="tags" class="form-label">Tags:</label>
+            {% if not tags %}
+            <input placeholder="Add tags" placeholder="Change tags" type="text" name="tags" id="tags"
+                class="form-control">
+            {% else %}
+            <input value="{{ tags }}" placeholder="Change tags" type="text" name="tags" id="tags" class="form-control">
+            {% endif %}
+            <p class="text-muted"><small>Tags are not mandatory. '#'-sign is not necessary to create tag, just write
+                    tags, separating them with coma.</small></p>
+        </div>
+        <button type="submit" class="btn btn-primary">Update question</button>
+    </form>
+</div>
+{% endblock %}

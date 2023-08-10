@@ -1,0 +1,53 @@
+{% extends 'form_base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <h1>Asklee login</h1>
+    <form action="{{ url_for('auth.login') }}" method="post">
+        {% if config.WTF_CSRF_ENABLED %}
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+        {% endif %}
+        <div class="mb-3 mt-3">
+            <label for="email" class="form-label">Email:</label>
+            {% if not email %}
+            <input id="email" type="email" class="form-control" placeholder="Enter email" name="email" required>
+            {% else %}
+            <input id="email" type="email" value="{{ email}}" class="form-control" placeholder="Enter email"
+                name="email" required>
+            {% endif %}
+            {% with messages=get_flashed_messages() %}
+            {% if messages %}
+            {% for message in messages %}
+            {% if 'email' in message|lower %}
+            <p class="text-danger">{{ message }}</p>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+        </div>
+        <div class="mb-3">
+            <label for="pwd" class="form-label">Password:</label>
+            <input id="pwd" type="password" class="form-control" placeholder="Enter password" name="password" required>
+            {% with messages=get_flashed_messages() %}
+            {% if messages %}
+            {% for message in messages %}
+            {% if 'password' in message|lower %}
+            <p class="text-danger">{{ message }}</p>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+        </div>
+        <div class="form-check mb-3">
+            <label class="form-check-label">
+                <input class="form-check-input" type="checkbox" name="remember"> Remember me
+            </label>
+        </div>
+        <button type="submit" class="btn btn-primary">Login</button>
+        <p class="text-center">
+            Don't have an account?
+            <a href="{{ url_for('auth.register') }}">Register</a>
+        </p>
+    </form>
+</div>
+{% endblock %}

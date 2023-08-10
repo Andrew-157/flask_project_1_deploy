@@ -1,0 +1,53 @@
+{% extends 'form_base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <h1>Ask any question you want</h1>
+    <form action="{{ url_for('main.personal_post_question') }}" method="post">
+        {% if config.WTF_CSRF_ENABLED %}
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+        {% endif %}
+        <div class="mb-3 mt-3">
+            <label for="title" class="form-label">Title:</label>
+            {% if not title %}
+            <input id="title" type="text" class="form-control" placeholder="Enter your question" name="title" required>
+            {% else %}
+            <input id="title" value="{{ title }}" type="text" class="form-control" placeholder="Enter your question"
+                name="title" required>
+            {% endif %}
+            <p class="text-muted"><small>Maximum length of you question is 300 characters.</small></p>
+            {% with messages=get_flashed_messages() %}
+            {% if messages %}
+            {% for message in messages %}
+            {% if 'title' in message|lower %}
+            <p class="text-danger">{{ message }}</p>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+        </div>
+        <div class="mb-3 mt-3">
+            <label for="details" class="form-label">Details:</label>
+            {% if not details %}
+            <textarea class="form-control" placeholder="Provide details for your question" name="details" id="details"
+                rows="7"></textarea>
+            {% else %}
+            <textarea class="form-control" placeholder="Provide details for your question" name="details" id="details"
+                rows="7">{{ details }}</textarea>
+            {% endif %}
+            <p class="text-muted"><small>Details are not mandatory, but they are helpful for other users</small></p>
+        </div>
+        <div class="mb-3 mt-3">
+            <label for="tags">Tags:</label>
+            {% if not tags %}
+            <input placeholder="Add tags" placeholder="Add tags" type="text" name="tags" id="tags" class="form-control">
+            {% else %}
+            <input value="{{ tags }}" placeholder="Add tags" type="text" name="tags" id="tags" class="form-control">
+            {% endif %}
+            <p class="text-muted"><small>Tags are not mandatory. '#'-sign is not necessary to create tag, just write
+                    tags, separating them with coma.</small></p>
+        </div>
+        <button type="submit" class="btn btn-primary">Ask</button>
+    </form>
+</div>
+{% endblock %}

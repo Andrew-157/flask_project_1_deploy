@@ -1,0 +1,29 @@
+{% extends 'main_base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="text-center">Welcome to Asklee, ask your questions and let other users help to find an answer</h1>
+    <div class="text-center">
+        <a class="btn btn-primary" href="{{ url_for('main.post_question')}}">
+            Ask your question</a>
+    </div>
+    <div class="container py-5">
+        <div class="card-columns">
+            <div class="row">
+                {% for tag in tags %}
+                <div class="col-sm-3">
+                    <div class="card" style="width: 300px;">
+                        <div class="card-body">
+                            <a class="text-decoration-none" href="{{ url_for('main.questions_by_tag', tag=tag.name) }}">
+                                <span class="badge bg-primary">{{ tag.name }}</span>
+                            </a> <br>
+                            Number of questions with tag: {{ tag.questions|length }}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
