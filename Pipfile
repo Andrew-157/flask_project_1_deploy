@@ -9,9 +9,9 @@ flask-sqlalchemy = "*"
 python-dotenv = "*"
 flask-migrate = "*"
 flask-login = "*"
-mysqlclient = "*"
 flask-wtf = "*"
 gunicorn = "*"
+mysqlclient = "==2.1.1"
 
 [dev-packages]
 autopep8 = "*"
