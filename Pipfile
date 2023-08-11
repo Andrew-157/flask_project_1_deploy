@@ -11,8 +11,7 @@ flask-migrate = "*"
 flask-login = "*"
 flask-wtf = "*"
 gunicorn = "*"
-mysqlclient = "==2.1.1"
-sqlparse = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
 autopep8 = "*"
