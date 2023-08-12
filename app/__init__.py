@@ -28,7 +28,7 @@ def method_not_allowed_for_page(e):
     return render_template('errors/405.html')
 
 
-def create_app(config_name: str | None = 'production'):
+def create_app(config_name: str = 'production'):
 
     app = Flask(__name__, instance_relative_config=True)
 
