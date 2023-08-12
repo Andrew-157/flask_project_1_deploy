@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_wtf.csrf import CSRFProtect
+from config import config
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -27,16 +28,11 @@ def method_not_allowed_for_page(e):
     return render_template('errors/405.html')
 
 
-def create_app(test_config=None):
+def create_app(config_name: str | None = 'production'):
 
     app = Flask(__name__, instance_relative_config=True)
-    if app.debug:
-        app.config.from_object('config.DevelopmentConfig')
-    else:
-        app.config.from_object('config.ProductionConfig')
 
-    if test_config:
-        app.config.from_mapping(test_config)
+    app.config.from_object(config[config_name])
 
     # Apply handling of status code with custom templates
     app.register_error_handler(400, bad_request)
