@@ -10,7 +10,7 @@
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
         {% endif %}
         <div class="mb-3 mt-3">
-            <label for="title" class="form-label">Title:</label>
+            <label for="title" class="form-label">Title*:</label>
             <input value="{{ question.title }}" type="text" id="title" class="form-control"
                 placeholder="Enter new title" name="title" required>
             <p class="text-muted"><small>Maximum length of you question is 300 characters.</small></p>

@@ -11,7 +11,7 @@
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
         {% endif %}
         <div class="mb-3 mt-3">
-            <label for="content" class="form-label">Answer's content:</label>
+            <label for="content" class="form-label">Answer's content*:</label>
             {% if not content %}
             <textarea class="form-control" placeholder="Update your answer:" name="content" id="details" rows="7"
                 required></textarea>

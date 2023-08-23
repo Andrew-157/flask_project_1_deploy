@@ -8,7 +8,7 @@
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
         {% endif %}
         <div class="mb-3 mt-3">
-            <label for="email" class="form-label">Email:</label>
+            <label for="email" class="form-label">Email*:</label>
             {% if not email %}
             <input id="email" type="email" class="form-control" placeholder="Enter email" name="email" required>
             {% else %}
@@ -26,7 +26,7 @@
             {% endwith %}
         </div>
         <div class="mb-3">
-            <label for="pwd" class="form-label">Password:</label>
+            <label for="pwd" class="form-label">Password*:</label>
             <input id="pwd" type="password" class="form-control" placeholder="Enter password" name="password" required>
             {% with messages=get_flashed_messages() %}
             {% if messages %}
