@@ -22,7 +22,7 @@ def split_tags_string(tags_str: str) -> list[str]:
         elif not tag:
             pass
         else:
-            tags_to_return.append(tag.strip())
+            tags_to_return.append(tag.strip().lower())
 
     for index, tag in enumerate(tags_to_return):
         tags_to_return[index] = '-'.join(tag.split(' '))
